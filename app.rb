@@ -1,8 +1,8 @@
 require 'bundler'
 Bundler.require(:default)
-require './lib/telegram'
+require './lib/subscriber'
 
-bot = Telegram.new(ENV['BOT_API_KEY'])
-bot.start_polling do |update|
+subscriber = Subscriber.new(ENV['BOT_API_KEY'])
+subscriber.subscribe do |update|
   p update
 end

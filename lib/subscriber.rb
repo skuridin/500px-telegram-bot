@@ -1,11 +1,11 @@
-class Telegram
+class Subscriber
   def initialize(api_key, timeout = 20)
     @api_url = "https://api.telegram.org/bot#{api_key}/getUpdates"
     @offset = 0
     @timeout = timeout
   end
 
-  def start_polling(&block)
+  def subscribe(&block)
     params = { offset: @offset, timeout: @timeout }
     res = RestClient.get @api_url, { accept: :json, params: params }
 
