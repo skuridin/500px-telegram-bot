@@ -1,13 +1,16 @@
 require 'bundler'
 Bundler.require(:default)
+require 'open-uri'
 require './lib/subscriber'
 require './lib/speaker'
+require './lib/five_hundred'
+require './lib/commander'
 
-subscriber = Subscriber.new(ENV['BOT_API_KEY'])
-speaker = Speaker.new(ENV['BOT_API_KEY'])
+subscriber = Subscriber.new ENV['BOT_API_KEY']
+speaker = Speaker.new ENV['BOT_API_KEY']
+fhp = FiveHundred.new ENV['FHP_API_KEY']
+commander = Commander.new speaker, fhp
 
 subscriber.subscribe do |update|
-  chat_id = update['message']['chat']['id']
-  reply_id = update['message']['message_id']
-  speaker.send_message(chat_id, 'hey!', reply_id)
+  commander.process update
 end
