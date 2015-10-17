@@ -1,6 +1,7 @@
 require 'bundler'
 Bundler.require(:default)
 require 'open-uri'
+require 'pathname'
 require './lib/subscriber'
 require './lib/speaker'
 require './lib/five_hundred'
