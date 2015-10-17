@@ -30,7 +30,16 @@ class Commander
       command = params[:reply_text]['text'].split(':')[0].downcase
       params[:arguments] = params[:text]
     end
-      self.send command, params if COMMANDS.include? command
+
+    if !params[:arguments].empty?
+      user = update['message']['from']
+      name = user['first_name']
+      name += " @#{user['username']}" if !user['username'].empty?
+      name += " #{user['last_name']}" if !user['last_name'].empty?
+      puts "#{name} asks for \"#{params[:arguments]}\""
+    end
+
+    self.send command, params if COMMANDS.include? command
   end
 
   def start(params)
