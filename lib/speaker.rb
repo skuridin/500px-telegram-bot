@@ -3,9 +3,12 @@ class Speaker
     @api_url = "https://api.telegram.org/bot#{api_key}"
   end
 
-  def send_message(chat_id, text, reply_id = nil)
+  def send_message(chat_id, text, reply_id = nil, force_reply = false)
     params = { chat_id: chat_id, text: text }
     params[:reply_to_message_id] = reply_id unless reply_id.nil?
+    if force_reply
+      params[:reply_markup] = { force_reply: true, selective: true }.to_json
+    end
     post "#{@api_url}/sendMessage", params
   end
 

@@ -15,13 +15,22 @@ class Commander
     params = {
       text: update['message']['text'],
       chat_id: update['message']['chat']['id'],
-      reply_id: update['message']['message_id']
+      reply_id: update['message']['message_id'],
+      reply_text: update['message']['reply_to_message']
     }
-    return if params[:text].nil? || params[:text][0] != '/'
-    params[:arguments] = params[:text][1..-1].split(' ')
-    command = params[:arguments].shift
-    params[:arguments] = params[:arguments].join ' '
-    self.send command, params if COMMANDS.include? command
+
+    return if params[:text].nil?
+
+    if params[:text][0] == '/'
+      params[:arguments] = params[:text][1..-1].split(' ')
+      command = params[:arguments].shift
+      command = command.split('@')[0]
+      params[:arguments] = params[:arguments].join ' '
+    elsif !params[:reply_text].nil?
+      command = params[:reply_text]['text'].split(':')[0].downcase
+      params[:arguments] = params[:text]
+    end
+      self.send command, params if COMMANDS.include? command
   end
 
   def start(params)
@@ -39,6 +48,8 @@ class Commander
 
   def search(params)
     if params[:arguments].empty?
+      text = 'Search: What photo are you looking for?'
+      @speaker.send_message params[:chat_id], text, params[:reply_id], true
     else
       @speaker.send_chat_action params[:chat_id]
       photo = @fhp.search params[:arguments]
@@ -48,6 +59,8 @@ class Commander
 
   def big(params)
     if params[:arguments].empty?
+      text = 'Big: What photo are you looking for?'
+      @speaker.send_message params[:chat_id], text, params[:reply_id], true
     else
       @speaker.send_chat_action params[:chat_id]
       photo = @fhp.search params[:arguments], 4
