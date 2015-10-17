@@ -15,9 +15,10 @@ class Speaker
   def send_photo(chat_id, photo, reply_id = nil)
     return send_not_found chat_id, reply_id if photo.nil? && photo[:file].nil?
 
-    caption = "Title: #{photo[:meta]['name']}"
-    caption += "\nAuthor: #{photo[:meta]['user']['fullname']}"
-    caption += "\nCamera: #{photo[:meta]['camera']}"
+    m = photo[:meta]
+    caption = "Title: #{m['name']}"
+    caption += "\nAuthor: #{m['user']['fullname']}"
+    caption += "\nCamera: #{m['camera']}" unless m['camera'].nil?
 
     params = { chat_id: chat_id, photo: photo[:file], caption: caption }
     params[:reply_to_message_id] = reply_id unless reply_id.nil?
