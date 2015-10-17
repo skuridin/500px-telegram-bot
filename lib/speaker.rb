@@ -13,6 +13,8 @@ class Speaker
     params = { chat_id: chat_id, photo: file }
     params[:reply_to_message_id] = reply_id unless reply_id.nil?
     post "#{@api_url}/sendPhoto", params
+    file.close
+    file.unlink
   end
 
   def send_chat_action(chat_id, action = 'upload_photo')
