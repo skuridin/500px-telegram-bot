@@ -15,6 +15,11 @@ class Speaker
     post "#{@api_url}/sendPhoto", params
   end
 
+  def send_chat_action(chat_id, action = 'upload_photo')
+    params = { chat_id: chat_id, action: action }
+    post "#{@api_url}/sendChatAction", params
+  end
+
   protected
     def post(url, params)
       headers = { content_type: :json, accept: :json }
