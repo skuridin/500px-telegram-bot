@@ -5,35 +5,34 @@ class Telegram
     @timeout = timeout
   end
 
-  def start_polling
+  def start_polling(&block)
     params = { offset: @offset, timeout: @timeout }
     res = RestClient.get @api_url, { accept: :json, params: params }
 
-    return error_handler unless res.code == 200
+    unless res.code == 200
+      return error_handler("Response code: #{res.code}", &block)
+    end
     begin
       updates = JSON.parse(res.body)
     rescue JSON::ParserError => e
-      return error_handler(e.message)
+      return error_handler(e.message, &block)
     end
-    return error_handler unless updates['ok'] == true
+    unless updates['ok'] == true
+      return error_handler("API response: #{updates['ok']}", &block)
+    end
 
     updates['result'].each do |update|
-      process_update update
+      block.call update
       @offset = update['update_id'] + 1
     end
 
-    self.send(__callee__)
+    self.send(__callee__, &block)
   end
 
   protected
-    def process_update(update)
-      p update
-    end
-
-    def error_handler(message = 'Problem with API')
+    def error_handler(message, &block)
       puts message
       sleep(1)
-      pull
-      return
+      self.send(caller_locations(1,1)[0].label, &block)
     end
 end

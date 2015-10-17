@@ -3,4 +3,6 @@ Bundler.require(:default)
 require './lib/telegram'
 
 bot = Telegram.new(ENV['BOT_API_KEY'])
-bot.start_polling
+bot.start_polling do |update|
+  p update
+end
