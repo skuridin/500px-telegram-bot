@@ -13,7 +13,7 @@ class Speaker
   end
 
   def send_photo(chat_id, photo, reply_id = nil)
-    return send_not_found chat_id, reply_id if photo.nil? && photo[:file].nil?
+    return send_not_found chat_id, reply_id if photo.nil? || photo[:file].nil?
 
     m = photo[:meta]
     caption = "Title: #{m['name']}"
