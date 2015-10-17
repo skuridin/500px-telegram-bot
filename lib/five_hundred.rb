@@ -20,7 +20,7 @@ class FiveHundred
 
   protected
     def download(photo)
-      return !Pathname.new(photo['url']).exist?
+      return nil if Pathname.new(photo['url']).exist?
       in_file = open photo['url']
       out_file = Tempfile.new [File.basename(in_file), ".#{photo['format']}"]
       out_file.write in_file.read
