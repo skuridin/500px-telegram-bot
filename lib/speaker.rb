@@ -12,13 +12,18 @@ class Speaker
     post "#{@api_url}/sendMessage", params
   end
 
-  def send_photo(chat_id, file, reply_id = nil)
-    return send_not_found chat_id, reply_id if file.nil?
-    params = { chat_id: chat_id, photo: file }
+  def send_photo(chat_id, photo, reply_id = nil)
+    return send_not_found chat_id, reply_id if photo.nil?
+
+    caption = "Title: #{photo[:meta]['name']}"
+    caption += "\nAuthor: #{photo[:meta]['user']['fullname']}"
+    caption += "\nCamera: #{photo[:meta]['camera']}"
+
+    params = { chat_id: chat_id, photo: photo[:file], caption: caption }
     params[:reply_to_message_id] = reply_id unless reply_id.nil?
     post "#{@api_url}/sendPhoto", params
-    file.close
-    file.unlink
+    photo[:file].close
+    photo[:file].unlink
   end
 
   def send_chat_action(chat_id, action = 'upload_photo')

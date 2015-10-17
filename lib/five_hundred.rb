@@ -10,8 +10,12 @@ class FiveHundred
     res = RestClient.get url, { accept: :json, params: params }
     photos = JSON.parse(res)['photos']
     return if photos.length == 0
-    photo = photos[rand photos.length]['images'][0]
-    download photo
+    photo = photos[rand photos.length]
+    file = download photo['images'][0]
+    return {
+      meta: photo,
+      file: file
+    }
   end
 
   protected
