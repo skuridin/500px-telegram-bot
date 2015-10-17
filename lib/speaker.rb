@@ -10,6 +10,7 @@ class Speaker
   end
 
   def send_photo(chat_id, file, reply_id = nil)
+    return send_not_found chat_id, reply_id if file.nil?
     params = { chat_id: chat_id, photo: file }
     params[:reply_to_message_id] = reply_id unless reply_id.nil?
     post "#{@api_url}/sendPhoto", params
@@ -30,5 +31,12 @@ class Speaker
       rescue RestClient::Exception => e
         puts e.message
       end
+    end
+
+    def send_not_found(chat_id, reply_id)
+      text = "Can't find photo :("
+      params = { chat_id: chat_id, text: text }
+      params[:reply_to_message_id] = reply_id unless reply_id.nil?
+      post "#{@api_url}/sendMessage", params
     end
 end

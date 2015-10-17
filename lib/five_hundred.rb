@@ -5,11 +5,11 @@ class FiveHundred
   end
 
   def search(term, size = 440)
-    term = term.strip.downcase
     url = "#{@api_url}/photos/search"
     params = { consumer_key: @api_key, term: term, image_size: size }
     res = RestClient.get url, { accept: :json, params: params }
     photos = JSON.parse(res)['photos']
+    return if photos.length == 0
     photo = photos[rand photos.length]['images'][0]
     download photo
   end
