@@ -6,7 +6,7 @@ class FiveHundred
 
   def search(term, size = 440)
     url = "#{@api_url}/photos/search"
-    params = { consumer_key: @api_key, term: term, image_size: size, rpp: 5 }
+    params = { consumer_key: @api_key, term: term, image_size: size, rpp: 10 }
     res = RestClient.get url, { accept: :json, params: params }
     photos = JSON.parse(res)['photos']
     return if photos.length == 0
