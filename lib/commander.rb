@@ -31,7 +31,7 @@ class Commander
       params[:arguments] = params[:text]
     end
 
-    if !params[:arguments].empty?
+    if !params[:arguments].nil? && !params[:arguments].empty?
       user = update['message']['from']
       name = user['first_name']
       name += " @#{user['username']}" if !user['username'].empty?
